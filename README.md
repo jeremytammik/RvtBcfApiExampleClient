@@ -1,6 +1,8 @@
 # RvtBcfApiExampleClient
 
-Revit C# .NET API add-in implementing the BuildingSMART [BCF API](https://github.com/BuildingSMART/BCF-API) example client.
+Revit C# .NET API add-in implementing
+the [BuildingSMART](http://www.buildingsmart-tech.org)
+[BCF API](https://github.com/BuildingSMART/BCF-API) example client.
 
 It is based on the existing [BcfApiExampleClient](https://github.com/rvestvik/BcfApiExampleClient).
 
@@ -22,4 +24,3 @@ Jeremy Tammik,
 
 This sample is licensed under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 Please see the [LICENSE](LICENSE) file for full details.
-

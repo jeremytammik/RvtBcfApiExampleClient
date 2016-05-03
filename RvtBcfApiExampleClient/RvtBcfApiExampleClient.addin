@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>BCF API Example Client</Text>
+    <Description>Revit C# .NET API add-in implementing the BuildingSMART BCF API example client</Description>
+    <Assembly>RvtBcfApiExampleClient.dll</Assembly>
+    <FullClassName>RvtBcfApiExampleClient.Command</FullClassName>
+    <ClientId></ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>

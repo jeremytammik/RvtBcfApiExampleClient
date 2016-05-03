@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RvtBcfApiExampleClient
 {
-    public class Class1
+    public class Command
     {
     }
 }

@@ -37,6 +37,7 @@ using System.Runtime.InteropServices;
 //
 // 2016-05-03 2017.0.0.0 manually converted from default Visual Studio 2017 wizard-generated class library to Revit add-in
 // 2016-05-03 2017.0.0.1 integrated all the BcfApiExampleClient sample code
+// 2016-05-03 2017.0.0.2 registered at https://bim--it.net and implemented client id and secret environment variables, but access fails
 //
-[assembly: AssemblyVersion("2017.0.0.1")]
-[assembly: AssemblyFileVersion("2017.0.0.1")]
+[assembly: AssemblyVersion("2017.0.0.2")]
+[assembly: AssemblyFileVersion("2017.0.0.2")]

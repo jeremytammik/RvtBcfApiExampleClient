@@ -20,8 +20,12 @@ namespace RvtBcfApiExampleClient
     {
       // Please fill in:
       string url = "https://bim--it.net/bcf";
-      string clientId = "YOUR_CLIENT_ID";
-      string clientSecret = "YOU_CLIENT_SECRET";
+
+      string clientId = Environment
+        .GetEnvironmentVariable( "BIM_IT_CLIENT_ID" );
+
+      string clientSecret = Environment
+        .GetEnvironmentVariable( "BIM_IT_CLIENT_SECRET" );
 
       var login = new ServerLoginUI();
       OAuthModule.ServerLoginUIObj = login;

@@ -36,6 +36,7 @@ using System.Runtime.InteropServices;
 // History:
 //
 // 2016-05-03 2017.0.0.0 manually converted from default Visual Studio 2017 wizard-generated class library to Revit add-in
+// 2016-05-03 2017.0.0.1 integrated all the BcfApiExampleClient sample code
 //
-[assembly: AssemblyVersion("2017.0.0.0")]
-[assembly: AssemblyFileVersion("2017.0.0.0")]
+[assembly: AssemblyVersion("2017.0.0.1")]
+[assembly: AssemblyFileVersion("2017.0.0.1")]

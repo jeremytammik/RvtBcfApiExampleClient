@@ -13,7 +13,9 @@ namespace RvtBcfApiExampleClient
       ref string message, 
       ElementSet elements )
     {
-      throw new NotImplementedException();
+      Program.Main();
+
+      return Result.Succeeded;
     }
   }
 }

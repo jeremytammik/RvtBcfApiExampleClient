@@ -1,13 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Autodesk.Revit.UI;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-//using System.Collections.Generic;
-//using System.IO;
-//using System.Linq;
-//using System.Net;
 using System.Text;
-//using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace RvtBcfApiExampleClient
 {
@@ -93,22 +88,30 @@ namespace RvtBcfApiExampleClient
       str.AppendLine( "token_type: " + json.token_type );
       str.AppendLine( "expires_in: " + json.expires_in );
       str.AppendLine( "refresh_token: " + json.refresh_token );
-      MessageBox.Show( str.ToString() );
+
+      TaskDialog.Show( "Authorisation", str.ToString() );
 
       result = client.Request( url + "/1.0/projects", 
         "GET", "Bearer " + token, "" );
 
       dynamic projects = JObject.Parse( "{list:" + result + "}" );
 
+      int n = 0;
       StringBuilder sb = new StringBuilder();
 
       foreach ( var project in projects.list )
       {
+        ++n;
         sb.AppendLine( (string) project.name );
       }
 
-      MessageBox.Show( "GET https://bim--it.net/bcf/1.0/projects" 
-        + Environment.NewLine + Environment.NewLine + sb.ToString() );
+      string caption = string.Format( "{0} project{1}", 
+        n, ( 1 == n ? "" : "s" ) );
+
+      TaskDialog.Show( caption, 
+        "GET https://bim--it.net/bcf/1.0/projects" 
+        + Environment.NewLine + Environment.NewLine 
+        + sb.ToString() );
     }
   }
 }

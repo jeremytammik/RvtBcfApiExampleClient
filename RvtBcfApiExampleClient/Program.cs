@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 //using System.Collections.Generic;
 //using System.IO;
@@ -12,36 +13,77 @@ namespace RvtBcfApiExampleClient
 {
   static class Program
   {
+    public const bool USE_DYNAMIC_CLIENT_REGISTRATION = true;
+
     /// <summary>
     /// The main entry point for the application.
     /// </summary>
-    //[STAThread]
+    [STAThread]
     public static void Main()
     {
-      // Please fill in:
+      // Please fill inn:
       string url = "https://bim--it.net/bcf";
-
-      string clientId = Environment
-        .GetEnvironmentVariable( "BIM_IT_CLIENT_ID" );
-
-      string clientSecret = Environment
-        .GetEnvironmentVariable( "BIM_IT_CLIENT_SECRET" );
-
-      var login = new ServerLoginUI();
-      OAuthModule.ServerLoginUIObj = login;
-      login.ShowDialog();
+      string clientId;
+      string clientSecret;
 
       var client = new WebWrapper();
 
-      string AuthorizationPlain = clientId + ":" + clientSecret;
+      // Get server authentication endpoints
+      dynamic authResult = JObject.Parse( client.Request( 
+        url + "/auth", "GET", string.Empty, string.Empty ) );
 
-      string AuthorizationEncoded = Convert.ToBase64String(
-        Encoding.Default.GetBytes( AuthorizationPlain ) );
+      // Get user-client grant authorization endpoint
+      // ( Webpage that is displayed to the user)
+      var authEndpoint = (string) authResult.oauth2_auth_url;
 
-      string result = client.Request( url + "/OAuth2/token", 
+      // Get endpoint for dynamic client registrations
+      var clientRegistrationEndpoint = (string) 
+        authResult.oauth2_dynamic_client_reg_url;
+
+      // Get the endpoint where token should be POSTed to
+      var tokenEndpoint = (string) authResult.oauth2_token_url;
+
+      if ( USE_DYNAMIC_CLIENT_REGISTRATION )
+      {
+        var clientInformation = new
+        {
+          client_name = "BCF API Example Client",
+          client_description = "Simple example client",
+          client_url = "https://github.com/rvestvik/BcfApiExampleClient",
+          redirect_url = "http://localhost:25512" // IP adress on which the local Kayak Server is listening
+        };
+        // Register an OAuth2 client
+        dynamic clientCreationResult = JObject.Parse( 
+          client.Request( clientRegistrationEndpoint, 
+          "POST", string.Empty, JsonConvert.SerializeObject( 
+            clientInformation ) ) );
+
+        clientId = (string) clientCreationResult.client_id;
+        clientSecret = (string) clientCreationResult.client_secret;
+      }
+      else
+      {
+        clientId = "YOUR_CLIENT_ID";
+        clientSecret = "YOU_CLIENT_SECRET";
+        clientId = Environment.GetEnvironmentVariable( "BIM_IT_CLIENT_ID" );
+        clientSecret = Environment.GetEnvironmentVariable( "BIM_IT_CLIENT_SECRET" );
+      }
+
+      var login = new ServerLoginUI( 
+        $"{authEndpoint}?response_type=code&client_id={clientId}&state={Guid.NewGuid()}" );
+
+      OAuthModule.ServerLoginUIObj = login;
+      login.ShowDialog();
+
+      string AuthorizationPlain = clientId + ":" 
+        + clientSecret;
+
+      string AuthorizationEncoded = Convert.ToBase64String( 
+        Encoding.UTF8.GetBytes( AuthorizationPlain ) );
+
+      string result = client.Request( tokenEndpoint, 
         "POST", "Basic " + AuthorizationEncoded, 
-        "grant_type=authorization_code&code=" 
-        + login.sAuthCode + "\n" );
+        "grant_type=authorization_code&code=" + login.sAuthCode );
 
       dynamic json = JObject.Parse( result );
       string token = json.access_token;
@@ -58,12 +100,13 @@ namespace RvtBcfApiExampleClient
 
       dynamic projects = JObject.Parse( "{list:" + result + "}" );
 
-      StringBuilder
-        sb = new StringBuilder();
+      StringBuilder sb = new StringBuilder();
+
       foreach ( var project in projects.list )
       {
         sb.AppendLine( (string) project.name );
       }
+
       MessageBox.Show( "GET https://bim--it.net/bcf/1.0/projects" 
         + Environment.NewLine + Environment.NewLine + sb.ToString() );
     }
